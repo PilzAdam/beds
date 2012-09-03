@@ -1,4 +1,3 @@
-local player_ges = 0
 local player_in_bed = 0
 
 minetest.register_node("beds:bed_bottom", {
@@ -145,14 +144,6 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_on_joinplayer(function(pl)
-	player_ges = player_ges+1
-end)
-
-minetest.register_on_leaveplayer(function(pl)
-	player_ges = player_ges-1
-end)
-
 local timer = 0
 local wait = false
 minetest.register_globalstep(function(dtime)
@@ -161,7 +152,8 @@ minetest.register_globalstep(function(dtime)
 	end
 	timer = 0
 	
-	if player_ges == player_in_bed and player_ges ~= 0 then
+	local players = #minetest.get_connected_players()
+	if players == player_in_bed and players ~= 0 then
 		if minetest.env:get_timeofday() < 0.2 or minetest.env:get_timeofday() > 0.805 then
 			if not wait then
 				minetest.chat_send_all("Good night!!!")
