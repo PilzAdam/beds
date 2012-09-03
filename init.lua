@@ -7,6 +7,7 @@ minetest.register_node("beds:bed_bottom", {
 	tiles = {"beds_bed_top_bottom.png", "default_wood.png",  "beds_bed_side.png",  "beds_bed_side.png",  "beds_bed_side.png",  "beds_bed_side.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	stack_max = 1,
 	groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {
