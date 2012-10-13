@@ -147,8 +147,9 @@ minetest.register_craft({
 local timer = 0
 local wait = false
 minetest.register_globalstep(function(dtime)
-	if timer<10 then
+	if timer<2 then
 		timer = timer+dtime
+		return
 	end
 	timer = 0
 	
