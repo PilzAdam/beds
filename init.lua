@@ -144,10 +144,10 @@ minetest.register_craft({
 	}
 })
 
-local player_spawns = {}
+beds_player_spawns = {}
 local file = io.open(minetest.get_worldpath().."/beds_player_spawns", "r")
 if file then
-	player_spawns = minetest.deserialize(file:read("*all"))
+	beds_player_spawns = minetest.deserialize(file:read("*all"))
 	file:close()
 end
 
@@ -171,11 +171,11 @@ minetest.register_globalstep(function(dtime)
 				end)
 				wait = true
 				for _,player in ipairs(minetest.get_connected_players()) do
-					player_spawns[player:get_player_name()] = player:getpos()
+					beds_player_spawns[player:get_player_name()] = player:getpos()
 				end
 				local file = io.open(minetest.get_worldpath().."/beds_player_spawns", "w")
 				if file then
-					file:write(minetest.serialize(player_spawns))
+					file:write(minetest.serialize(beds_player_spawns))
 					file:close()
 				end
 			end
@@ -185,8 +185,8 @@ end)
 
 minetest.register_on_respawnplayer(function(player)
 	local name = player:get_player_name()
-	if player_spawns[name] then
-		player:setpos(player_spawns[name])
+	if beds_player_spawns[name] then
+		player:setpos(beds_player_spawns[name])
 		return true
 	end
 end)
