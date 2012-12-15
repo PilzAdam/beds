@@ -72,7 +72,7 @@ minetest.register_node("beds:bed_bottom", {
 		if not puncher:is_player() then
 			return
 		end
-		if puncher:get_wielded_item():get_name() == "" then
+		if not puncher:get_player_control().sneak then
 			local meta = minetest.env:get_meta(pos)
 			local param2 = node.param2
 			if param2 == 0 then
