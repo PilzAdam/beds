@@ -68,42 +68,40 @@ minetest.register_node("beds:bed_bottom", {
 		end
 	end,
 	
-	on_punch = function(pos, node, puncher)
-		if not puncher:is_player() then
+	on_rightclick = function(pos, node, clicker)
+		if not clicker:is_player() then
 			return
 		end
-		if not puncher:get_player_control().sneak then
-			local meta = minetest.env:get_meta(pos)
-			local param2 = node.param2
+		local meta = minetest.env:get_meta(pos)
+		local param2 = node.param2
+		if param2 == 0 then
+			pos.z = pos.z+1
+		elseif param2 == 1 then
+			pos.x = pos.x+1
+		elseif param2 == 2 then
+			pos.z = pos.z-1
+		elseif param2 == 3 then
+			pos.x = pos.x-1
+		end
+		if clicker:get_player_name() == meta:get_string("player") then
 			if param2 == 0 then
-				pos.z = pos.z+1
-			elseif param2 == 1 then
-				pos.x = pos.x+1
-			elseif param2 == 2 then
-				pos.z = pos.z-1
-			elseif param2 == 3 then
 				pos.x = pos.x-1
+			elseif param2 == 1 then
+				pos.z = pos.z+1
+			elseif param2 == 2 then
+				pos.x = pos.x+1
+			elseif param2 == 3 then
+				pos.z = pos.z-1
 			end
-			if puncher:get_player_name() == meta:get_string("player") then
-				if param2 == 0 then
-					pos.x = pos.x-1
-				elseif param2 == 1 then
-					pos.z = pos.z+1
-				elseif param2 == 2 then
-					pos.x = pos.x+1
-				elseif param2 == 3 then
-					pos.z = pos.z-1
-				end
-				pos.y = pos.y-0.5
-				puncher:setpos(pos)
-				meta:set_string("player", "")
-				player_in_bed = player_in_bed-1
-			elseif meta:get_string("player") == "" then
-				pos.y = pos.y-0.5
-				puncher:setpos(pos)
-				meta:set_string("player", puncher:get_player_name())
-				player_in_bed = player_in_bed+1
-			end
+			pos.y = pos.y-0.5
+			clicker:setpos(pos)
+			meta:set_string("player", "")
+			player_in_bed = player_in_bed-1
+		elseif meta:get_string("player") == "" then
+			pos.y = pos.y-0.5
+			clicker:setpos(pos)
+			meta:set_string("player", clicker:get_player_name())
+			player_in_bed = player_in_bed+1
 		end
 	end
 })
