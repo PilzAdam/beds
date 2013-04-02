@@ -45,6 +45,7 @@ for i in ipairs(beds_list) do
 
 		on_construct = function(pos)
 			local node = minetest.env:get_node(pos)
+			local p = {x=pos.x, y=pos.y, z=pos.z}
 			local param2 = node.param2
 			node.name = "beds:bed_top_"..colour
 			if param2 == 0 then
@@ -56,8 +57,10 @@ for i in ipairs(beds_list) do
 			elseif param2 == 3 then
 				pos.x = pos.x-1
 			end
-			if( minetest.env:get_node({x=pos.x, y=pos.y, z=pos.z}).name == "air" ) then
+			if minetest.registered_nodes[minetest.env:get_node(pos).name].buildable_to  then
 				minetest.env:set_node(pos, node)
+			else
+				minetest.env:remove_node(p)
 			end
 		end,
 			
@@ -120,7 +123,7 @@ for i in ipairs(beds_list) do
 	
 	minetest.register_node("beds:bed_top_"..colour, {
 		drawtype = "nodebox",
-		tiles = {"beds_bed_top_top_"..colour..".png", "default_wood.png",  "beds_bed_side_top_r_"..colour..".png",  "beds_bed_side_top_l_"..colour..".png",  "default_wood.png",  "beds_bed_side_"..colour..".png"},
+		tiles = {"beds_bed_top_top_"..colour..".png", "default_wood.png",  "beds_bed_side_top_r_"..colour..".png",  "beds_bed_side_top_l_"..colour..".png",  "beds_bed_top_front.png",  "beds_bed_side_"..colour..".png"},
 		paramtype = "light",
 		paramtype2 = "facedir",
 		groups = {snappy=1,choppy=2,oddly_breakable_by_hand=2,flammable=3},
@@ -145,15 +148,20 @@ for i in ipairs(beds_list) do
 		},
 	})
 	
-	minetest.register_alias("beds:bed_bottom", "beds:bed_bottom_blue")
-	minetest.register_alias("beds:bed_top", "beds:bed_top_blue")
-	minetest.register_alias("beds:bed", "beds:bed_bottom_blue")
 	minetest.register_alias("beds:bed_"..colour, "beds:bed_bottom_"..colour)
 	
 	minetest.register_craft({
 		output = "beds:bed_"..colour,
 		recipe = {
 			{"wool:"..colour, "wool:"..colour, "wool:white", },
+			{"default:stick", "", "default:stick", }
+		}
+	})
+	
+	minetest.register_craft({
+		output = "beds:bed_"..colour,
+		recipe = {
+			{"wool:white", "wool:"..colour, "wool:"..colour, },
 			{"default:stick", "", "default:stick", }
 		}
 	})
@@ -194,6 +202,10 @@ for i in ipairs(beds_list) do
 		end
 	})
 end
+
+minetest.register_alias("beds:bed_bottom", "beds:bed_bottom_blue")
+minetest.register_alias("beds:bed_top", "beds:bed_top_blue")
+minetest.register_alias("beds:bed", "beds:bed_bottom_blue")
 
 beds_player_spawns = {}
 local file = io.open(minetest.get_worldpath().."/beds_player_spawns", "r")
