@@ -43,7 +43,7 @@ for i in ipairs(beds_list) do
 					}
 		},
 
-		on_construct = function(pos)
+		after_place_node = function(pos, placer, itemstack)
 			local node = minetest.env:get_node(pos)
 			local p = {x=pos.x, y=pos.y, z=pos.z}
 			local param2 = node.param2
@@ -61,6 +61,7 @@ for i in ipairs(beds_list) do
 				minetest.env:set_node(pos, node)
 			else
 				minetest.env:remove_node(p)
+				return true
 			end
 		end,
 			
