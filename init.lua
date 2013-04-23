@@ -110,12 +110,24 @@ for i in ipairs(beds_list) do
 					pos.z = pos.z-1
 				end
 				pos.y = pos.y-0.5
+				clicker:set_physics_override(1, 1, 1)
 				clicker:setpos(pos)
 				meta:set_string("player", "")
 				player_in_bed = player_in_bed-1
 			elseif meta:get_string("player") == "" then
-				pos.y = pos.y-0.5
+				pos.y = pos.y-1
+				clicker:set_physics_override(0, 0, 0)
 				clicker:setpos(pos)
+				if param2 == 0 then
+					clicker:set_look_yaw(math.pi)
+				elseif param2 == 1 then
+					clicker:set_look_yaw(0.5*math.pi)
+				elseif param2 == 2 then
+					clicker:set_look_yaw(0)
+				elseif param2 == 3 then
+					clicker:set_look_yaw(1.5*math.pi)
+				end
+				
 				meta:set_string("player", clicker:get_player_name())
 				player_in_bed = player_in_bed+1
 			end
@@ -167,41 +179,6 @@ for i in ipairs(beds_list) do
 		}
 	})
 	
-	minetest.register_abm({
-		nodenames = {"beds:bed_bottom_"..colour},
-		interval = 1,
-		chance = 1,
-		action = function(pos, node)
-			local meta = minetest.env:get_meta(pos)
-			if meta:get_string("player") ~= "" then
-				local param2 = node.param2
-				if param2 == 0 then
-					pos.z = pos.z+1
-				elseif param2 == 1 then
-					pos.x = pos.x+1
-				elseif param2 == 2 then
-					pos.z = pos.z-1
-				elseif param2 == 3 then
-					pos.x = pos.x-1
-				end
-				local player = minetest.env:get_player_by_name(meta:get_string("player"))
-				if player == nil then
-					meta:set_string("player", "")
-					player_in_bed = player_in_bed-1
-					return
-				end
-				local player_pos = player:getpos()
-				player_pos.x = math.floor(0.5+player_pos.x)
-				player_pos.y = math.floor(0.5+player_pos.y)
-				player_pos.z = math.floor(0.5+player_pos.z)
-				if pos.x ~= player_pos.x or pos.y ~= player_pos.y or pos.z ~= player_pos.z then
-					meta:set_string("player", "")
-					player_in_bed = player_in_bed-1
-					return
-				end
-			end
-		end
-	})
 end
 
 minetest.register_alias("beds:bed_bottom", "beds:bed_bottom_blue")
